@@ -2,8 +2,9 @@ from PIL import Image
 from PIL.ImageQt import ImageQt
 from PyQt5.QtWidgets import QApplication, QWidget, QLabel
 from PyQt5.Qt import QImage, QPixmap
+from PyQt5.QtCore import Qt
 import sys
-from request import image
+from request import *
 
 
 def except_hook(cls, exception, traceback):
@@ -20,16 +21,30 @@ class Window(QWidget):
 
     def initUI(self):
         # Зададим размер и положение нашего виджета,
-        self.setGeometry(20, 60, 700, 600)
+        self.setGeometry(200, 200, 700, 550)
         # А также его заголовок
         self.setWindowTitle('как')
-        self.pixmap = QPixmap(QImage(ImageQt(image)))
         # Если картинки нет, то QPixmap будет пустым,
         # а исключения не будет
+        self.coords = find_toponym("Москва Коптево")
+        self.delta = defaultdelta
         self.image = QLabel(self)
-        self.image.move(60, 60)
+        self.image.move(50, 50)
         # Отображаем содержимое QPixmap в объекте QLabel
-        self.image.setPixmap(self.pixmap)
+        self.image.setPixmap(QPixmap(QImage(ImageQt(gib_me_da_pic(*self.coords, self.delta)))))
+
+    def keyPressEvent(self, e):
+        sizechange = 2
+        if e.key() == Qt.Key_PageDown:
+            self.delta *= sizechange
+        elif e.key() == Qt.Key_PageUp:
+            self.delta /= sizechange
+        self.delta = round(min(max(mindelta, self.delta), maxdelta), 5)
+        self.update()
+
+    def update(self):
+        self.image.setPixmap(QPixmap(QImage(ImageQt(gib_me_da_pic(*self.coords, self.delta)))))
+
 
 
 if __name__ == '__main__':
