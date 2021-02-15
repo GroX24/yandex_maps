@@ -39,7 +39,16 @@ class Window(QWidget):
             self.delta *= sizechange
         elif e.key() == Qt.Key_PageUp:
             self.delta /= sizechange
+        elif e.key() == Qt.Key_Right:
+            self.coords[0] += self.delta / 4
+        elif e.key() == Qt.Key_Left:
+            self.coords[0] -= self.delta / 4
+        elif e.key() == Qt.Key_Up:
+            self.coords[1] += self.delta / 4
+        elif e.key() == Qt.Key_Down:
+            self.coords[1] -= self.delta / 4
         self.delta = round(min(max(mindelta, self.delta), maxdelta), 5)
+        self.coords = list(map(lambda x: round(x, 5), self.coords))
         self.update()
 
     def update(self):

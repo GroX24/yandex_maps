@@ -27,15 +27,16 @@ def find_toponym(toponym_to_find):
     # Координаты центра топонима:
     toponym_coodrinates = toponym["Point"]["pos"]
     # Долгота и широта:
-    toponym_longitude, toponym_lattitude = toponym_coodrinates.split(" ")
-    return toponym_longitude, toponym_lattitude
+    toponym_longitude, toponym_lattitude = list(map(float, toponym_coodrinates.split(" ")))
+    return [toponym_longitude, toponym_lattitude]
 
 
 def gib_me_da_pic(toponym_longitude, toponym_lattitude, delta):
     delta = str(delta)
+    coords = ",".join([str(toponym_longitude), str(toponym_lattitude)])
     # Собираем параметры для запроса к StaticMapsAPI:
     map_params = {
-        "ll": ",".join([toponym_longitude, toponym_lattitude]),
+        "ll": coords,
         "spn": ",".join([delta, delta]),
         "l": "map",
         "size": ",".join(list(map(str, mapsize)))
